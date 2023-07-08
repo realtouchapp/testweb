@@ -1,1 +1,130 @@
-test
+<!doctype html>
+<html lang="zh-Hant-TW">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>確認碼產生器</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>\
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <script>
+    function genCheckCode() {
+      let phone = $("#phone").val();
+      if (!phone || phone.length < 10) {
+        $("#checkcode").html("請輸入電話號碼(10碼)，如0912345678");
+        alert("請輸入電話號碼(10碼)，如0912345678");
+        return;
+      }
+      let d = new Date($.now());
+      //d = new Date("2023/07/02 11:56:56");
+      console.log(d);
+      if("產生時間：" + d.toLocaleString('zh-TW') == $("#datetime").html()) {
+        $("#checkcode").html("重複產生");
+        alert("請勿重複產生");
+        return;
+      }
+      $("#datetime").html("產生時間：" + d.toLocaleString('zh-TW'));
+      /*
+      //檢查金球99確認碼是否正確
+      秒(+p3), 年(-22*10+p4), 日(+p5), 分(+p6), 月(+p7,8), 時(+p9, 10), 年月日時分秒總和(%100)
+      範例：
+      電話：0952314802
+      時間：2023/07/02 11:56:56
+      過程：(56+5), ((23-22)*10+2), (2+3), (56+1), (7+4+8), (11+0+2), (23+7+2+11+56+56)%100
+      輸出：61120557191355
+
+      //其餘兩項確認碼
+      秒(+p3), 年(-22*10+p4), 日(+p5), 分(+p6), 月(+p9, 10), 時(+p7,8), 年月日時分秒*2總和(%100)
+      範例：
+      電話：0952314802
+      時間：2023/07/02 11:56:56
+      過程：(56+5), ((23-22)*10+2), (2+3), (56+1), (7+0+2), (11+4+8), (23+7+2+11+56+56)*2%100
+      輸出：61120557092310
+      */
+      let code = "";
+      let tmp = (d.getSeconds() + parseInt(phone[2]));
+      code += (tmp > 10) ? tmp : '0' + tmp;
+      tmp = ((d.getFullYear() - 2022) * 10 + parseInt(phone[3]));
+      code += (tmp > 10) ? tmp : '0' + tmp;
+      tmp = (d.getDate() + parseInt(phone[4]));
+      code += (tmp > 10) ? tmp : '0' + tmp;
+      tmp = (d.getMinutes() + parseInt(phone[5]));
+      code += (tmp > 10) ? tmp : '0' + tmp;
+      if($("#gametype").val() == "1") {
+        //金球99
+        tmp = (1 + d.getMonth() + parseInt(phone[6]) + parseInt(phone[7]));
+        code += (tmp > 10) ? tmp : '0' + tmp;
+        tmp = (d.getHours() + parseInt(phone[8]) + parseInt(phone[9]));
+        code += (tmp > 10) ? tmp : '0' + tmp;
+        tmp = ((1 + d.getFullYear() + d.getMonth() + d.getDate() + d.getHours() + d.getMinutes() + d.getSeconds()) % 100);
+        code += (tmp >= 10) ? tmp : '0' + tmp;
+      } else {
+        //其餘兩項
+        tmp = (1 + d.getMonth() + parseInt(phone[8]) + parseInt(phone[9]));
+        code += (tmp > 10) ? tmp : '0' + tmp;
+        tmp = (d.getHours() + parseInt(phone[6]) + parseInt(phone[7]));
+        code += (tmp > 10) ? tmp : '0' + tmp;
+        tmp = ( ((1 + d.getFullYear() + d.getMonth() + d.getDate() + d.getHours() + d.getMinutes() + d.getSeconds()) * 2) % 100 );
+        code += (tmp >= 10) ? tmp : '0' + tmp;
+      }
+      
+      $("#checkcode").html("確認碼：" + code);
+
+      //解碼：
+      let sec = parseInt(code.slice(0, 2)) - phone[2];
+      let year = 2022 + (parseInt(code.slice(2, 4)) - phone[3]) / 10;
+      let date = parseInt(code.slice(4, 6)) - phone[4];
+      let min = parseInt(code.slice(6, 8)) - phone[5];
+      let month1 = parseInt(code.slice(8, 10)) - phone[6] - phone[7];
+      let hour1 = parseInt(code.slice(10, 12)) - phone[8] - phone[9];
+      let month2 = parseInt(code.slice(8, 10)) - phone[8] - phone[9];
+      let hour2 = parseInt(code.slice(10, 12)) - phone[6] - phone[7];
+      let checkcode = parseInt(code.slice(12, 14));
+      if (checkcode == (year + month1 + date + hour1 + min + sec) % 100 || 
+          checkcode == ((year + month2 + date + hour2 + min + sec) * 2) % 100
+      ) {
+        //檢查成功，確認碼正確
+        console.log("檢查成功，確認碼正確");
+      }
+    }
+  </script>
+  <div class="container h4 text-center">
+    <!-- Content here -->
+    <div class="row">
+      <div class="col-12">
+        <h2>確認碼產生器</h2>
+      </div>
+      <div class="col-12" id="datetime"></div>
+      <div class="col-12 mt-3">
+        <div class="input-group mb-3">
+          <span class="input-group-text">遊戲方式</span>
+          <select id="gametype" >
+            <option value="1">金球99</option>
+            <option value="2">金神氣</option>
+            <option value="3">金大樂</option>
+          </select>
+      </div>
+      <div class="col-12 mt-3">
+        <div class="input-group mb-3">
+          <span class="input-group-text">電話</span>
+          <input id="phone" value="" class="form-control" placeholder="請輸入電話號碼" aria-label="電話號碼"
+            type="number" min="10" max="10">
+        </div>
+      </div>
+      <div class="col-12">
+        <button class="btn btn-success btn-lg" onclick="genCheckCode();">產生確認碼</button>
+      </div>
+      <div class="col-12 mt-3" id="checkcode"></div>
+    </div>
+  </div>
+</body>
+
+</html>
