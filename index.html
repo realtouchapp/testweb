@@ -39,7 +39,7 @@
       電話：0952314802
       時間：2023/07/02 11:56:56
       過程：(56+5+2), (2+3+1), (56+4+8), (11+0+2), (2+11+56+56)%100
-      輸出：6306681345
+      輸出：6306681325
 
       //其餘兩項確認碼
       秒(+p3+p4), 分(+p5+p6), 日(+p7+p8), 時(+p9+p10), 日時分秒*2總和(%100)
@@ -47,7 +47,7 @@
       電話：0952314802
       時間：2023/07/02 11:56:56
       過程：(56+5+2), (56+3+1), (2+4+8), (11+0+2), (2+11+56+56)*2%100
-      輸出：6360141390
+      輸出：6360141350
       */
       let code = "";
       let tmp = d.getSeconds() + parseInt(phone[2]) + parseInt(phone[3]);
@@ -83,6 +83,7 @@
       let date2 = parseInt(code.slice(4, 6)) - phone[6] - phone[7];
       let hour = parseInt(code.slice(6, 8)) - phone[8] - phone[9];
       let checkcode = parseInt(code.slice(8, 10));
+      console.log(date1, hour, min1, sec);
       if (checkcode == (date1 + hour + min1 + sec) % 100 || 
           checkcode == ((date2 + hour + min2 + sec) * 2) % 100
       ) {
