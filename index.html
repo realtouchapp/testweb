@@ -83,7 +83,6 @@
       let date2 = parseInt(code.slice(4, 6)) - phone[6] - phone[7];
       let hour = parseInt(code.slice(6, 8)) - phone[8] - phone[9];
       let checkcode = parseInt(code.slice(8, 10));
-      console.log(date1, hour, min1, sec);
       if (checkcode == (date1 + hour + min1 + sec) % 100 || 
           checkcode == ((date2 + hour + min2 + sec) * 2) % 100
       ) {
