@@ -24,7 +24,7 @@
         return;
       }
       let d = new Date($.now());
-      //d = new Date("2023/07/02 11:56:56");
+      d = new Date("2023/07/02 11:56:56");
       console.log(d);
       if("產生時間：" + d.toLocaleString('zh-TW') == $("#datetime").html()) {
         $("#checkcode").html("重複產生");
@@ -34,62 +34,53 @@
       $("#datetime").html("產生時間：" + d.toLocaleString('zh-TW'));
       /*
       //檢查金球99確認碼是否正確
-      秒(+p3), 年(-22*10+p4), 日(+p5), 分(+p6), 月(+p7,8), 時(+p9, 10), 年月日時分秒總和(%100)
+      秒(+p3+p4), 日(+p5+p6), 分(+p7+p8), 時(+p9+10), 日時分秒總和(%100)
       範例：
       電話：0952314802
       時間：2023/07/02 11:56:56
-      過程：(56+5), ((23-22)*10+2), (2+3), (56+1), (7+4+8), (11+0+2), (23+7+2+11+56+56)%100
-      輸出：61120557191355
+      過程：(56+5+2), (2+3+1), (56+4+8), (11+0+2), (2+11+56+56)%100
+      輸出：6306681345
 
       //其餘兩項確認碼
-      秒(+p3), 年(-22*10+p4), 日(+p5), 分(+p6), 月(+p9, 10), 時(+p7,8), 年月日時分秒*2總和(%100)
+      秒(+p3+p4), 分(+p5+p6), 日(+p7+p8), 時(+p9+p10), 日時分秒*2總和(%100)
       範例：
       電話：0952314802
       時間：2023/07/02 11:56:56
-      過程：(56+5), ((23-22)*10+2), (2+3), (56+1), (7+0+2), (11+4+8), (23+7+2+11+56+56)*2%100
-      輸出：61120557092310
+      過程：(56+5+2), (56+3+1), (2+4+8), (11+0+2), (2+11+56+56)*2%100
+      輸出：6360141390
       */
       let code = "";
-      let tmp = (d.getSeconds() + parseInt(phone[2]));
-      code += (tmp > 10) ? tmp : '0' + tmp;
-      tmp = ((d.getFullYear() - 2022) * 10 + parseInt(phone[3]));
-      code += (tmp > 10) ? tmp : '0' + tmp;
-      tmp = (d.getDate() + parseInt(phone[4]));
-      code += (tmp > 10) ? tmp : '0' + tmp;
-      tmp = (d.getMinutes() + parseInt(phone[5]));
+      let tmp = (d.getSeconds() + parseInt(phone[2])) + parseInt(phone[3]));
       code += (tmp > 10) ? tmp : '0' + tmp;
       if($("#gametype").val() == "1") {
         //金球99
-        tmp = (1 + d.getMonth() + parseInt(phone[6]) + parseInt(phone[7]));
+        tmp = (d.getDate() + parseInt(phone[4])) + parseInt(phone[5]));
+        code += (tmp > 10) ? tmp : '0' + tmp;
+        tmp = (d.getMinutes() + parseInt(phone[6])) + parseInt(phone[7]));
         code += (tmp > 10) ? tmp : '0' + tmp;
         tmp = (d.getHours() + parseInt(phone[8]) + parseInt(phone[9]));
         code += (tmp > 10) ? tmp : '0' + tmp;
-        tmp = ((1 + d.getFullYear() + d.getMonth() + d.getDate() + d.getHours() + d.getMinutes() + d.getSeconds()) % 100);
-        code += (tmp >= 10) ? tmp : '0' + tmp;
       } else {
         //其餘兩項
-        tmp = (1 + d.getMonth() + parseInt(phone[8]) + parseInt(phone[9]));
+        tmp = (d.getMinutes() + parseInt(phone[4])) + parseInt(phone[5]));
         code += (tmp > 10) ? tmp : '0' + tmp;
-        tmp = (d.getHours() + parseInt(phone[6]) + parseInt(phone[7]));
+        tmp = (d.getDate() + parseInt(phone[6])) + parseInt(phone[7]));
         code += (tmp > 10) ? tmp : '0' + tmp;
-        tmp = ( ((1 + d.getFullYear() + d.getMonth() + d.getDate() + d.getHours() + d.getMinutes() + d.getSeconds()) * 2) % 100 );
-        code += (tmp >= 10) ? tmp : '0' + tmp;
+        tmp = (d.getHours() + parseInt(phone[8]) + parseInt(phone[9]));
+        code += (tmp > 10) ? tmp : '0' + tmp;
       }
-      
       $("#checkcode").html("確認碼：" + code);
 
       //解碼：
-      let sec = parseInt(code.slice(0, 2)) - phone[2];
-      let year = 2022 + (parseInt(code.slice(2, 4)) - phone[3]) / 10;
-      let date = parseInt(code.slice(4, 6)) - phone[4];
-      let min = parseInt(code.slice(6, 8)) - phone[5];
-      let month1 = parseInt(code.slice(8, 10)) - phone[6] - phone[7];
-      let hour1 = parseInt(code.slice(10, 12)) - phone[8] - phone[9];
-      let month2 = parseInt(code.slice(8, 10)) - phone[8] - phone[9];
-      let hour2 = parseInt(code.slice(10, 12)) - phone[6] - phone[7];
-      let checkcode = parseInt(code.slice(12, 14));
-      if (checkcode == (year + month1 + date + hour1 + min + sec) % 100 || 
-          checkcode == ((year + month2 + date + hour2 + min + sec) * 2) % 100
+      let sec = parseInt(code.slice(0, 2)) - phone[2] - phone[3];
+      let min1 = parseInt(code.slice(4, 6)) - phone[6] - phone[7];
+      let date1 = parseInt(code.slice(2, 4)) - phone[4] - phone[5];
+      let min2 = parseInt(code.slice(2, 4)) - phone[4] - phone[5];
+      let date2 = parseInt(code.slice(4, 6)) - phone[6] - phone[7];
+      let hour = parseInt(code.slice(6, 8)) - phone[8] - phone[9];
+      let checkcode = parseInt(code.slice(8, 10));
+      if (checkcode == (date1 + hour + min1 + sec) % 100 || 
+          checkcode == ((date2 + hour + min2 + sec) * 2) % 100
       ) {
         //檢查成功，確認碼正確
         console.log("檢查成功，確認碼正確");
