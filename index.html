@@ -60,6 +60,8 @@
         code += (tmp > 10) ? tmp : '0' + tmp;
         tmp = d.getHours() + parseInt(phone[8]) + parseInt(phone[9]);
         code += (tmp > 10) ? tmp : '0' + tmp;
+        tmp = (d.getDate() + d.getHours() + d.getMinutes() + d.getSeconds()) % 100; 
+        code += (tmp > 10) ? tmp : '0' + tmp;
       } else {
         //其餘兩項
         tmp = d.getMinutes() + parseInt(phone[4]) + parseInt(phone[5]);
@@ -67,6 +69,8 @@
         tmp = d.getDate() + parseInt(phone[6]) + parseInt(phone[7]);
         code += (tmp > 10) ? tmp : '0' + tmp;
         tmp = d.getHours() + parseInt(phone[8]) + parseInt(phone[9]);
+        code += (tmp > 10) ? tmp : '0' + tmp;
+        tmp = ((d.getDate() + d.getHours() + d.getMinutes() + d.getSeconds()) * 2) % 100; 
         code += (tmp > 10) ? tmp : '0' + tmp;
       }
       $("#checkcode").html("確認碼：" + code);
