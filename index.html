@@ -24,7 +24,7 @@
         return;
       }
       let d = new Date($.now());
-      //d = new Date("2023/07/02 11:56:56");
+      d = new Date("2023/07/18 19:34:34");
       console.log(d);
       if("產生時間：" + d.toLocaleString('zh-TW') == $("#datetime").html()) {
         $("#checkcode").html("重複產生");
@@ -51,27 +51,27 @@
       */
       let code = "";
       let tmp = d.getSeconds() + parseInt(phone[2]) + parseInt(phone[3]);
-      code += (tmp > 10) ? tmp : '0' + tmp;
+      code += (tmp >= 10) ? tmp : '0' + tmp;
       if($("#gametype").val() == "1") {
         //金球99
         tmp = d.getDate() + parseInt(phone[4]) + parseInt(phone[5]);
-        code += (tmp > 10) ? tmp : '0' + tmp;
+        code += (tmp >= 10) ? tmp : '0' + tmp;
         tmp = d.getMinutes() + parseInt(phone[6]) + parseInt(phone[7]);
-        code += (tmp > 10) ? tmp : '0' + tmp;
+        code += (tmp >= 10) ? tmp : '0' + tmp;
         tmp = d.getHours() + parseInt(phone[8]) + parseInt(phone[9]);
-        code += (tmp > 10) ? tmp : '0' + tmp;
+        code += (tmp >= 10) ? tmp : '0' + tmp;
         tmp = (d.getDate() + d.getHours() + d.getMinutes() + d.getSeconds()) % 100; 
-        code += (tmp > 10) ? tmp : '0' + tmp;
+        code += (tmp >= 10) ? tmp : '0' + tmp;
       } else {
         //其餘兩項
         tmp = d.getMinutes() + parseInt(phone[4]) + parseInt(phone[5]);
-        code += (tmp > 10) ? tmp : '0' + tmp;
+        code += (tmp >= 10) ? tmp : '0' + tmp;
         tmp = d.getDate() + parseInt(phone[6]) + parseInt(phone[7]);
-        code += (tmp > 10) ? tmp : '0' + tmp;
+        code += (tmp >= 10) ? tmp : '0' + tmp;
         tmp = d.getHours() + parseInt(phone[8]) + parseInt(phone[9]);
-        code += (tmp > 10) ? tmp : '0' + tmp;
+        code += (tmp >= 10) ? tmp : '0' + tmp;
         tmp = ((d.getDate() + d.getHours() + d.getMinutes() + d.getSeconds()) * 2) % 100; 
-        code += (tmp > 10) ? tmp : '0' + tmp;
+        code += (tmp >= 10) ? tmp : '0' + tmp;
       }
       $("#checkcode").html("確認碼：" + code);
 
