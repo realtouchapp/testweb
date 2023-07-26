@@ -70,7 +70,7 @@
         code += (tmp >= 10) ? tmp : '0' + tmp;
         tmp = d.getHours() + parseInt(phone[8]) + parseInt(phone[9]);
         code += (tmp >= 10) ? tmp : '0' + tmp;
-        tmp = ((d.getDate() + d.getHours() + d.getMinutes() + d.getSeconds()) * 2) % 107; 
+        tmp = ((d.getDate() + d.getHours() + d.getMinutes() + d.getSeconds()) * 2) % 97; 
         code += (tmp >= 10) ? tmp : '0' + tmp;
       }
       $("#checkcode").html("確認碼：" + code);
