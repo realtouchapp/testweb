@@ -24,7 +24,7 @@
         return;
       }
       let d = new Date($.now());
-      //d = new Date("2023/07/18 19:34:34");
+      //d = new Date("2023/07/25 20:41:14");
       console.log(d);
       if("產生時間：" + d.toLocaleString('zh-TW') == $("#datetime").html()) {
         $("#checkcode").html("重複產生");
@@ -60,7 +60,7 @@
         code += (tmp >= 10) ? tmp : '0' + tmp;
         tmp = d.getHours() + parseInt(phone[8]) + parseInt(phone[9]);
         code += (tmp >= 10) ? tmp : '0' + tmp;
-        tmp = (d.getDate() + d.getHours() + d.getMinutes() + d.getSeconds()) % 100; 
+        tmp = (d.getDate() + d.getHours() + d.getMinutes() + d.getSeconds()) % 79; 
         code += (tmp >= 10) ? tmp : '0' + tmp;
       } else {
         //其餘兩項
@@ -70,7 +70,7 @@
         code += (tmp >= 10) ? tmp : '0' + tmp;
         tmp = d.getHours() + parseInt(phone[8]) + parseInt(phone[9]);
         code += (tmp >= 10) ? tmp : '0' + tmp;
-        tmp = ((d.getDate() + d.getHours() + d.getMinutes() + d.getSeconds()) * 2) % 100; 
+        tmp = ((d.getDate() + d.getHours() + d.getMinutes() + d.getSeconds()) * 2) % 107; 
         code += (tmp >= 10) ? tmp : '0' + tmp;
       }
       $("#checkcode").html("確認碼：" + code);
@@ -83,11 +83,13 @@
       let date2 = parseInt(code.slice(4, 6)) - phone[6] - phone[7];
       let hour = parseInt(code.slice(6, 8)) - phone[8] - phone[9];
       let checkcode = parseInt(code.slice(8, 10));
-      if (checkcode == (date1 + hour + min1 + sec) % 100 || 
-          checkcode == ((date2 + hour + min2 + sec) * 2) % 100
-      ) {
+      if (checkcode == (date1 + hour + min1 + sec) % 79) {
         //檢查成功，確認碼正確
-        console.log("檢查成功，確認碼正確");
+        console.log("金球99檢查成功，確認碼正確");
+      }
+      else if (checkcode == ((date2 + hour + min2 + sec) * 2) % 107) {
+        //檢查成功，確認碼正確
+        console.log("金神氣 / 金大樂檢查成功，確認碼正確");
       }
     }
   </script>
